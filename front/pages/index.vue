@@ -1,6 +1,6 @@
 <template>
     <div>
-        index {{name}}
+         Main Page
     </div>
 </template>
 <script>
@@ -9,7 +9,7 @@ export default {
         return {
             name: 'Nuxt.js'
         }
-    }
+    },
 }
 </script>
 <style>
