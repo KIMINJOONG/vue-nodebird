@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <div>
+        <nav>
             <v-toolbar dark color="green">
                 <v-toolbar-title>
                     <nuxt-link to="/">NodeBird</nuxt-link>
@@ -16,7 +16,15 @@
                     </v-btn>
                 </v-toolbar-items>
             </v-toolbar>
-        </div>
+        </nav>
+        <v-row>
+            <v-col cols="12" xs="12" md="4">
+                로그인창
+            </v-col>
+            <v-col cols="12" xs="12" md="8">
+                컨텐츠
+            </v-col>
+        </v-row>
     </v-app>
 </template>
 
