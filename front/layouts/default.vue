@@ -17,19 +17,23 @@
                 </v-toolbar-items>
             </v-toolbar>
         </nav>
-        <v-row>
+        <v-row no-gutters>
             <v-col cols="12" xs="12" md="4">
-                로그인창
+                <login-form />
             </v-col>
             <v-col cols="12" xs="12" md="8">
-                컨텐츠
+                <nuxt />
             </v-col>
         </v-row>
     </v-app>
 </template>
 
 <script>
+import LoginForm from '~/components/LoginForm';
 export default {
+    components: {
+        LoginForm,
+    }
 }
 </script>
 
