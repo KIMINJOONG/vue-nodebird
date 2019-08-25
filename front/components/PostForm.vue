@@ -12,7 +12,7 @@
                     :success-messages="successMessages"
                     :success="success"
                     :rules="[v => !!v.trim() || '내용을 입력하세요.']"
-                    @input="onChangeTextarea"
+                    @input="onChangeTextarea(content)"
                 />
                 <v-btn type="submit" color="green" absolute right>짹짹</v-btn>
                 <v-btn>이미지 업로드</v-btn>
@@ -38,10 +38,12 @@ export default {
         ...mapState('users', ['me'])
     },
     methods: {
-        onChangeTextarea() {
-            this.hideDetails = true;
-            this.success = false;
-            this.successMessages = '';
+        onChangeTextarea(value) {
+            if(value.length) {
+                this.hideDetails = true;
+                this.success = false;
+                this.successMessages = '';
+            }
         },
         onSubmitForm() {
             if(this.$refs.form.validate()) {
