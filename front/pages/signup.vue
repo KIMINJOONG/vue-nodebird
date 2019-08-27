@@ -73,6 +73,21 @@ export default {
             ],
         }
     },
+    computed: {
+        me() {
+            return this.$store.state.users.me;
+        }
+    },
+    watch: {
+        me(value, oldValue) {
+            if(value) {
+                this.$router.push({
+
+                    path: '/'
+                });
+            }
+        }
+    },
     methods: {
         onSubmitForm() {
             if(this.$refs.form.validate()) {
@@ -94,7 +109,10 @@ export default {
         return {
             title: '회원가입'
         }
-    }
+    },
+    middleware: 'anonymous',
+    
+    
 }
 </script>
 <style>

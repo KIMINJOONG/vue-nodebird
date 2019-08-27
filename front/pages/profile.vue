@@ -74,7 +74,8 @@ export default {
         followingList() {
             return this.$store.state.users.followingList
         }
-    }
+    },
+    middleware: 'athenticated',
 }
 </script>
 <style>
