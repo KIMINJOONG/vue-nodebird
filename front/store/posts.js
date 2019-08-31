@@ -3,6 +3,7 @@ export const state = () => ({
     hasMorePost: true,
 });
 
+const totalPosts = 51;
 const limit = 10;
 
 export const mutations = {
@@ -18,7 +19,9 @@ export const mutations = {
         state.mainPosts[index].Comments.unshift(payload);
     },
     loadPosts(state, payload) {
-        const fakePosts = Array(limit).fill().map(v => ({
+        //인피니트 스크롤링 구문
+        const diff = totalPosts - state.mainPosts.length; // 아직 안 불러온 게시글 수
+        const fakePosts = Array(diff > limit ? limit : diff).fill().map(v => ({
             id: Math.random().toString(),
             User: {
                 id: 1,
