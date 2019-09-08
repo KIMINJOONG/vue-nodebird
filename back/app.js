@@ -1,9 +1,12 @@
 const express = require('express');
 const db = require('./models');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
 const app = express();
 
 db.sequelize.sync();
 
+app.use(cors('http://localhost:3000')); // 3000포트만 허용하는것을 명시
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -13,9 +16,10 @@ app.get('/', (req, res) => {
 
 app.post('/user', async (req, res, next) => {
     try {
+        const hash = await bcrypt.hash(req.body.password, 12);
         const newUser = await db.User.create({
             email: req.body.email,
-            password: req.body.password,
+            password: hash,
             nickname: req.body.nickname,
         }); //HTTP STATUS CODE
         res.status(201).json(newUser);
