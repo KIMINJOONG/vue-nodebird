@@ -17,15 +17,24 @@ app.get('/', (req, res) => {
 app.post('/user', async (req, res, next) => {
     try {
         const hash = await bcrypt.hash(req.body.password, 12);
+        const exUser = await db.User.findOne({
+            email: req.body.email,
+        });
+        if(exUser) {
+            return res.status(403).json({
+                errorCode: 1,
+                message: '이미 회원가입되어있습니다.'
+            });
+        }
         const newUser = await db.User.create({
             email: req.body.email,
             password: hash,
             nickname: req.body.nickname,
         }); //HTTP STATUS CODE
-        res.status(201).json(newUser);
+        return res.status(201).json(newUser);
     }catch(err) {
         console.log(err);
-        next(err);
+        return next(err);
     }
     
 
