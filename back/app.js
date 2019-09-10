@@ -13,14 +13,21 @@ db.sequelize.sync();
 passportConfig();
 
 app.use(morgan('dev'));
-app.use(cors('http://localhost:3000')); // 3000포트만 허용하는것을 명시
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+})); // 3000포트만 허용하는것을 명시
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookie('cookiesecret'));
 app.use(session({
     resave: false,
     saveUninitialized: false,
-    secret: 'cookiesecret'
+    secret: 'cookiesecret',
+    cookie: {
+        httpOnly: true,
+        secure: false,
+    }
 }));
 app.use(passport.initialize()); // -> req안에 req.login과 req.logout을 넣어줌
 app.use(passport.session()); 
@@ -48,6 +55,23 @@ app.post('/user', async (req, res, next) => {
             password: hash,
             nickname: req.body.nickname,
         }); //HTTP STATUS CODE
+
+        passport.authenticate('local', (err, user, info) => {
+            if(err) {
+                console.error(err);
+                return next(err);
+            }
+            if(info) {
+                return res.status(401).send(info.reason);
+            }
+            return req.login(user, async (err) => { // 세션에다 사용자 정보 저장 (어떻게? serializeUser => passport/index.js)
+                if(err) {
+                    console.error(err);
+                    return next(err);
+                }
+                return res.json(user);
+            });
+        })(req, res, next);
         return res.status(201).json(newUser);
     }catch(err) {
         console.log(err);
