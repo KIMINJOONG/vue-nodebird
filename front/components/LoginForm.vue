@@ -53,7 +53,7 @@ export default {
             if(this.$refs.form.validate()) {
                 this.$store.dispatch('users/logIn', {
                     email: this.email,
-                    nickname: '인중초',
+                    password: this.password,
                 });
             }
         },
