@@ -11,6 +11,7 @@ const morgan = require('morgan');
 
 const usersRouter = require('./routes/user');
 
+// db.sequelize.sync({ force: true });
 db.sequelize.sync();
 passportConfig();
 

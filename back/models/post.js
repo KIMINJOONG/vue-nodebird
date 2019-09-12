@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         db.Post.belongsTo(db.User); // 게시글은 사용자에 속해있다. belongsTo를 붙이면 UserId가 같이 생성됨
         db.Post.hasMany(db.Comment); // hasMany는 딱히 생성해주지않음
         db.Post.hasMany(db.Image);
+        db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
     };
     return Post;
 }
