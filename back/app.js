@@ -33,6 +33,7 @@ app.use(session({
         secure: false,
     }
 }));
+app.use('/', express.static('uploads'));
 app.use(passport.initialize()); // -> req안에 req.login과 req.logout을 넣어줌
 app.use(passport.session()); 
 
