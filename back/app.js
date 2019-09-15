@@ -10,6 +10,7 @@ const cookie = require('cookie-parser');
 const morgan = require('morgan');
 
 const usersRouter = require('./routes/user');
+const postRouter = require('./routes/post');
 
 // db.sequelize.sync({ force: true });
 db.sequelize.sync();
@@ -40,6 +41,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', usersRouter);
+app.use('/post', postRouter);
+
 
 app.listen(3085, () => {
     console.log(`http://localhost:${3085}`)
