@@ -58,6 +58,55 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     }
 });
 
+router.get('/:id/comments', async (req, res, next) => {
+    try{
+        const post = await db.Post.findOne({ where: { id: req.params.id } });
+        if(!post) {
+            return res.status(404).send('포스트가 존재하지 않습니다.');
+        }
+        const comments = await db.Post.findAll({
+            where: {
+                PostId: req.params.id
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname']
+            }],
+            order: [['createdAt', 'ASC']] // 여러개의 정렬조건이 있을수있기때문에 1차원배열이 아닌 2차원배열로 만듦
+        })
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+});
+
+router.post('/:id/comment', isLoggedIn, async (req, res, next) => {
+    try{
+        const post = await db.Post.findOne({ where: { id: req.params.id } });
+        if(!post){
+            return res.status(404).send('포스트가 존재하지 않습니다.');
+        }
+        const newComment = await db.Comment.create({
+            PostId: post.id,
+            UserId: req.user.id,
+            content: req.body.content,
+        });
+        const comment = await db.Comment.findOne({
+            where: {
+                id: newComment.id,
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname']
+            }],
+        });
+        return res.json(comment);
+    }catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
+
 
 
 module.exports = router;
