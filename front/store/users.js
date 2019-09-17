@@ -52,6 +52,15 @@ export const mutations = {
 }
 
 export const actions = {
+    loadUser({ commit }, payload) {
+        this.$axios.get('http://localhost:3085/user', {
+            withCredentials: true,
+        }).then((res) => {
+
+        }).catch((err) => {
+
+        });
+    },
     signUp({ commit, state }, payload) {
         this.$axios.post('http://localhost:3085/user', {
             email: payload.email,

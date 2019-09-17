@@ -22,3 +22,5 @@ router.get('/', async (req, res, next) => { // GET /posts?offset=10&limit=10
         next(err);
     }
 });
+
+module.exports = router;

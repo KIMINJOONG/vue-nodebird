@@ -5,6 +5,12 @@ const passport = require('passport');
 const db = require('../models');
 const { isNotLoggedIn, isLoggedIn } = require('./middlewares');
 
+
+router.get('/', isLoggedIn, async (req, res, next) => {
+    const user = req.user;
+    return res.json(user);
+});
+
 router.post('/',isNotLoggedIn, async (req, res, next) => {
     try {
         const hash = await bcrypt.hash(req.body.password, 12);
