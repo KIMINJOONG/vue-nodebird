@@ -26,7 +26,7 @@ export const mutations = {
     },
     loadPosts(state, payload) {
         state.mainPosts = state.mainPosts.concat(payload);
-        state.hasMorePost = payload.length === limit;
+        state.hasMorePost = payload.length === 10;
     },
     concatImagePaths(state, payload) {
         state.imagePaths = state.imagePaths.concat(payload);
@@ -56,7 +56,7 @@ export const actions = {
         }).then((res) => {
             commit('removeMainPost', payload);
         }).catch((err) => {
-
+            console.error(err);
         });
     },
     loadComment({ commit, payload }) {

@@ -27,7 +27,7 @@ export default {
         }
     },
     fetch({ store }) {
-        store.dispatch('posts/loadPosts');
+        return store.dispatch('posts/loadPosts');
     },
     mounted() {
         // created에서 했으면 beforeDestroy에서 없애주지않으면 메모리 누수가 생긴다.

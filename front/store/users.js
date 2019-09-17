@@ -56,9 +56,9 @@ export const actions = {
         this.$axios.get('http://localhost:3085/user', {
             withCredentials: true,
         }).then((res) => {
-
+            commit('setMe', res.data);
         }).catch((err) => {
-
+            console.log(err);
         });
     },
     signUp({ commit, state }, payload) {
