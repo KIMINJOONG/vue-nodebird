@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => { // GET /posts?offset=10&limit=10
             offset: parseInt(req.query.offset, 10) || 0,
             limit: parseInt(req.query.limit, 10) || 10
         });
-        res.json(posts);
+        res.status(200).json(posts);
     }catch(err){
         console.error(err);
         next(err);

@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export const state = () => ({
     mainPosts : [],
     hasMorePost: true,
@@ -16,17 +18,19 @@ export const mutations = {
         const index = state.mainPosts.findIndex(v => v.id === payload.postId);
         state.mainPosts.splice(index, 1);
     },
-    addComment(state, payload) {
-        const index = state.mainPosts.findIndex(v=> v.id === payload.postId);
-        state.mainPosts[index].Comments.unshift(payload);
-    },
     loadComments(state, payload) {
         const index = state.mainPosts.findIndex(v => v.id === payload.postId);
-        state.mainPosts[index].Comments = payload;
+        // 실수 :  state.mainPosts[index].Comments = payload.data; 속성은 vue.set으로 추가 직접 넣어주면 안됨
+        Vue.set(state.mainPosts[index], 'Comments', payload.data);
     },
+    addComment(state, payload) {
+        const index = state.mainPosts.findIndex(v=> v.id === payload.PostId);
+        state.mainPosts[index].Comments.unshift(payload);
+    },
+    
     loadPosts(state, payload) {
         state.mainPosts = state.mainPosts.concat(payload);
-        state.hasMorePost = payload.length === 10;
+        // state.hasMorePost = payload.length === 10;
     },
     concatImagePaths(state, payload) {
         state.imagePaths = state.imagePaths.concat(payload);
@@ -59,9 +63,12 @@ export const actions = {
             console.error(err);
         });
     },
-    loadComment({ commit, payload }) {
+    loadComments({ commit }, payload) {
         this.$axios.get(`http://localhost:3085/post/${payload.postId}/comments`).then((res) => {
-            commit('loadComments', res.data);
+            commit('loadComments', {
+                postId: payload.postId,
+                data: res.data
+            });
         }).catch(() => {
 
         })
@@ -78,13 +85,14 @@ export const actions = {
         })
         
     },
-    loadPosts({ commit, state }, payload) {
+    async loadPosts({ commit, state }, payload) {
         if(state.hasMorePost) {
-            this.$axios.get(`http://localhost:3085/posts?offset=${state.mainPosts.length}&limit=10`).then((res) => {
+            try{
+                const res = await this.$axios.get(`http://localhost:3085/posts?offset=${state.mainPosts.length}&limit=10`);
                 commit('loadPosts', res.data);
-            }).catch((err) => {
+            }catch(err) {
                 console.error(err);
-            });
+            }
         }
     },
     uploadImages({ commit }, payload) {

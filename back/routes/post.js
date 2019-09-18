@@ -78,7 +78,7 @@ router.get('/:id/comments', async (req, res, next) => {
         if(!post) {
             return res.status(404).send('포스트가 존재하지 않습니다.');
         }
-        const comments = await db.Post.findAll({
+        const comments = await db.Comment.findAll({
             where: {
                 PostId: req.params.id
             },
@@ -87,7 +87,8 @@ router.get('/:id/comments', async (req, res, next) => {
                 attributes: ['id', 'nickname']
             }],
             order: [['createdAt', 'ASC']] // 여러개의 정렬조건이 있을수있기때문에 1차원배열이 아닌 2차원배열로 만듦
-        })
+        });
+        return res.status(200).json(comments);
     }catch(err){
         console.error(err);
         next(err);
