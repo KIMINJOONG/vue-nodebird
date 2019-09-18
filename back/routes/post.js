@@ -44,11 +44,28 @@ router.post('/', isLoggedIn, async (req, res, next) => {
             // post 에서 model정의할때 belongsToMany설정할때 add, get,set, get removeHashtag등등 다생김 
             await newPost.addHashtags(result.map(r => r[0]));
         }
+        if(req.body.image) {
+            // array로 감싸는 이유?
+            // express에서 req.body.image를 파싱할때 이미지가 여러개냐 하나냐, 이미지가 하나라도 배열로 해야하는데
+            // 한개일때 그냥 문자열로 처리하는 이슈가 있기때문에 구분을 함
+            if(Array.isArray(req.body.image)) {
+                await Promise.all(req.body.image.map((image) => {
+                    return db.Image.create({ src: image, PostId: newPost.id });
+                    // await이 안붙은 경우
+                    // 안붙으면 Promise,
+                    // Promise와 map이 있으면 Promise.all로 처리를 해줘야한다.
+                }));
+            } else {
+                await db.Image.create({ src: req.body.image, PostId: newPost.id });
+            }
+        }
         const fullPost = await db.Post.findOne({
             where: { id: newPost.id },
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname']
+            }, {
+                model: db.Image,
             }],
         })
         return res.json(fullPost);

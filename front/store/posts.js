@@ -45,7 +45,7 @@ export const actions = {
         // 서버에 게시글 등록 요청 보냄
         this.$axios.post('http://localhost:3085/post', {
             content: payload.content,
-            imagePaths: state.imagePaths,
+            image: state.imagePaths,
         }, {
             withCredentials: true,
         }).then((res) => {
