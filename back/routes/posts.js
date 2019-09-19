@@ -12,6 +12,17 @@ router.get('/', async (req, res, next) => { // GET /posts?offset=10&limit=10
                 model: db.User,
                 attributes: ['id', 'nickname'],
             }, {
+                model: db.User,
+                as: 'Likers',
+                attributes: ['id']
+            }, {
+                model: db.Post,
+                as: 'Retweet',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname']
+                }]
+            }, {
                 model: db.Image,
             }],
             order: [['createdAt', 'DESC']],

@@ -19,7 +19,7 @@ passportConfig();
 
 app.use(morgan('dev'));
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3080',
     credentials: true
 })); // 3000포트만 허용하는것을 명시
 app.use(express.json());

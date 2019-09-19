@@ -66,6 +66,10 @@ router.post('/', isLoggedIn, async (req, res, next) => {
                 attributes: ['id', 'nickname']
             }, {
                 model: db.Image,
+            }, {
+                model: db.User,
+                as: 'Likers',
+                attributes: ['id'],
             }],
         })
         return res.json(fullPost);
@@ -174,6 +178,10 @@ router.post('/:id/retweet', async (req, res, next) => {
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+            }, {
+                model: db.User,
+                as: 'Likers',
+                attributes: ['id'],
             }, {
                 model: db.Post,
                 as: 'Retweet',
