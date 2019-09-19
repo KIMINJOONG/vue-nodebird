@@ -29,6 +29,12 @@ export default {
     fetch({ store }) {
         return store.dispatch('posts/loadPosts');
     },
+    asyncData() {
+        // 비동기 작업을 위한 data
+        // 리턴값이 data에서 사용가능
+        // 컴포넌트 데이터를 비동기로 채워야할경우 사용
+        return{};
+    },
     mounted() {
         // created에서 했으면 beforeDestroy에서 없애주지않으면 메모리 누수가 생긴다.
         // window는 created에서 사용 불가 mounted를 사용해야함

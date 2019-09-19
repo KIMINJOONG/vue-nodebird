@@ -43,7 +43,7 @@ export const mutations = {
 export const actions = {
     add({ commit, state }, payload ) {
         // 서버에 게시글 등록 요청 보냄
-        this.$axios.post('http://localhost:3085/post', {
+        this.$axios.post('/post', {
             content: payload.content,
             image: state.imagePaths,
         }, {
@@ -55,7 +55,7 @@ export const actions = {
         
     },
     remove({ commit }, payload) {
-        this.$axios.delete(`http://localhost:3085/post/${payload.postId}`, {
+        this.$axios.delete(`/post/${payload.postId}`, {
             withCredentials: true,
         }).then((res) => {
             commit('removeMainPost', payload);
@@ -64,7 +64,7 @@ export const actions = {
         });
     },
     loadComments({ commit }, payload) {
-        this.$axios.get(`http://localhost:3085/post/${payload.postId}/comments`).then((res) => {
+        this.$axios.get(`/post/${payload.postId}/comments`).then((res) => {
             commit('loadComments', {
                 postId: payload.postId,
                 data: res.data
@@ -74,7 +74,7 @@ export const actions = {
         })
     },
     addComment({ commit }, payload) {
-        this.$axios.post(`http://localhost:3085/post/${payload.postId}/comment`, {
+        this.$axios.post(`/post/${payload.postId}/comment`, {
             content: payload.content,
         }, {
             withCredentials: true,
@@ -88,7 +88,7 @@ export const actions = {
     async loadPosts({ commit, state }, payload) {
         if(state.hasMorePost) {
             try{
-                const res = await this.$axios.get(`http://localhost:3085/posts?offset=${state.mainPosts.length}&limit=10`);
+                const res = await this.$axios.get(`/posts?offset=${state.mainPosts.length}&limit=10`);
                 commit('loadPosts', res.data);
             }catch(err) {
                 console.error(err);
@@ -96,7 +96,7 @@ export const actions = {
         }
     },
     uploadImages({ commit }, payload) {
-        this.$axios.post('http://localhost:3085/post/images', payload, {
+        this.$axios.post('/post/images', payload, {
             withCredentials: true,
         }).then((res) => {
             commit('concatImagePaths', res.data);

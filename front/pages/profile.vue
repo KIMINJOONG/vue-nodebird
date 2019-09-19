@@ -54,7 +54,7 @@ export default {
     },
     fetch({ store }) {
         store.dispatch('loadFollowers');
-        store.dispatch('loadFollowings');
+        return store.dispatch('loadFollowings');
     },
     methods: {
         onChangeNickname() {

@@ -139,6 +139,10 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => {
     }
 });
 
+router.post('/:id/retweet', async (req, res, next) => {
+
+});
+
 
 
 module.exports = router;
