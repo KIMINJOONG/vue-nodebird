@@ -192,6 +192,34 @@ router.post('/:id/retweet', async (req, res, next) => {
     }
 });
 
+router.post('/:id/like', isLoggedIn, async (req, res, next) => {
+    try{
+        const post = await db.Post.findOne({ where: { id: req.params.id } });
+        if(!post) {
+            return res.status(404).send('포스트가 존재하지 않습니다.');
+        }
+        await post.addLiker(req.user.id);
+        return res.json({ userId: req.user.id });
+    }catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
+    try{
+        const post = await db.Post.findOne({ where: { id: req.params.id } });
+        if(!post) {
+            return res.status(404).send('포스트가 존재하지 않습니다.');
+        }
+        await post.removeLiker(req.user.id);
+        return res.json({ userId: req.user.id });
+    }catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
 
 
 module.exports = router;
