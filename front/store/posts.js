@@ -118,7 +118,7 @@ export const actions = {
     retweet({ commit }, payload) {
         this.$axios.post(`/post/${payload.postId}/retweet`, {}, {
             withCredentials: true,
-        }).then(() => {
+        }).then((res) => {
             commit('addMainPost', res.data);
         }).catch((error) => {
             console.error(error);
@@ -128,7 +128,7 @@ export const actions = {
     likePost({ commit }, payload) {
         this.$axios.post(`/post/${payload.postId}/like`, {}, {
             withCredentials: true,
-        }).then(() => {
+        }).then((res) => {
             commit('likePost', {
                 userId: res.data.userId,
                 postId: payload.postId

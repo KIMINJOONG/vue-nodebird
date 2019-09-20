@@ -74,7 +74,7 @@ export default {
     },
     computed: {
         me() {
-            return this.$stroe.state.users.me;
+            return this.$store.state.users.me;
         },
         liked() {
             const me = this.$store.state.users.me;
@@ -112,7 +112,7 @@ export default {
             });
         },
         onClickHeart() {
-            if(this.me) {
+            if(!this.me) {
                 return  alert('로그인이 필요합니다.');
             }
             if(this.liked) {
