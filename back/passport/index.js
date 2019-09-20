@@ -11,7 +11,16 @@ module.exports = () => {
         try{
             const user = await db.User.findOne({ 
                 where: { id }, 
-                attributes: ['id', 'nickname'] 
+                attributes: ['id', 'nickname'],
+                include: [{
+                    model: db.User,
+                    as: 'Followings',
+                    attributes: ['id'],
+                }, {
+                    model: db.User,
+                    as: 'Followers',
+                    attributes: ['id']
+                }], 
             });
             return done(null, user); // req.user 와 req.isAuthenticated() === true 로 만들어줌
         } catch(err) {
