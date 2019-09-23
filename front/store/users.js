@@ -33,11 +33,16 @@ export const mutations = {
     },
     loadFollowings(state, payload) {
         state.followingList = state.followingList.concat(payload.data);
-        state.hasMoreFollowing = fakeUsers.length === limit;
+        state.hasMoreFollowing = payload.data.length === limit;
     },
     loadFollowers(state, payload) {
-        state.followerList = state.followerList.concat(payload.data);
-        state.hasMoreFollower = fakeUsers.length === limit;
+        if(payload.offset === 0) {
+            state.followerList = payload.data;
+        } else {
+            state.followerList = state.followerList.concat(payload.data);
+        }
+        
+        state.hasMoreFollower = payload.data.length === limit;
     },
     following(state, payload) {
         state.me.Followings.push({ id: payload.userId });
@@ -111,8 +116,8 @@ export const actions = {
         commit('removeFollower', payload);
     },
     loadFollowers({ commit, state }, payload) {
-        const offset = state.followerList.length;
-        if(state.hasMoreFollower) {
+        const offset = payload && payload.offset === 0 ? 0 : state.followerList.length;
+        if(state.hasMoreFollower || payload && payload.offset === 0) {
             return this.$axios.get(`/user/${state.me.id}/followers?limit=3&offset=${offset}`, {
                 withCredentials: true,
             }).then((res) => {
@@ -126,8 +131,8 @@ export const actions = {
         }
     },
     loadFollowings({ commit , state }, payload) {
-        const offset = state.followingList.length;
-        if(state.hasMoreFollowing) {
+        const offset = payload && payload.offset === 0 ? 0 : state.followingList.length;
+        if(state.hasMoreFollowing || payload && payload.offset === 0) {
             return this.$axios.get(`/user/${state.me.id}/followings?limit=3&offset=${offset}`, {
                 withCredentials: true,
             }).then((res) => {
