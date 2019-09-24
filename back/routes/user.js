@@ -48,6 +48,9 @@ router.post('/',isNotLoggedIn, async (req, res, next) => {
                     where: { id: user.id },
                     attributes: ['id', 'email', 'nickname'],
                     include: [{
+                        model: db.Post,
+                        attributes: ['id']
+                    },{
                         model: db.User,
                         as: 'Followings',
                         attributes: ['id'],
@@ -88,6 +91,9 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
                 where: { id: user.id },
                 attributes: ['id', 'email', 'nickname'],
                 include: [{
+                    model: db.Post,
+                    attributes: ['id']
+                },{
                     model: db.User,
                     as: 'Followings',
                     attributes: ['id'],
@@ -158,7 +164,7 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
         const user = await db.User.findOne({
             where: { id: req.user.id },
         });
-        const followings = await user.getFollowers({
+        const followings = await user.getFollowings({
             attributes: ['id', 'nickname'],
             limit: parseInt(req.query.limit || 3, 10),
             offset: parseInt(req.query.offset || 0, 10),
@@ -169,6 +175,19 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
+
+router.delete('/:id/follower', isLoggedIn, async (req, res, next) => {
+    try{
+        const me = await db.User.findOne({
+            where: { id: req.user.id },
+        });
+        await me.removeFollower(req.params.id);
+        res.send(req.params.id);
+    }catch(error) {
+        console.error(error);
+        next(error);
+    }
+})
 
 router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     try{
