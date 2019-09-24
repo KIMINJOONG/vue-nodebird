@@ -11,6 +11,32 @@ router.get('/', isLoggedIn, async (req, res, next) => {
     return res.json(user);
 });
 
+router.get('/:id', async (req, res, next) => {
+    try{
+        const user = await db.User.findOne({
+            where: { id: parseInt(req.params.id, 10) },
+            include: [{
+                model: db.Post,
+                as: 'Posts',
+                attributes: ['id'],
+            }, {
+                model: db.User,
+                as: 'Followings',
+                attributes: ['id'],
+            }, {
+                model: db.User,
+                as: 'Followers',
+                attributes: ['id'],
+            }],
+            attributes: ['id', 'nickname'],
+        });
+        return res.json(user);
+    }catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
 router.post('/',isNotLoggedIn, async (req, res, next) => {
     try {
         const hash = await bcrypt.hash(req.body.password, 12);
@@ -113,6 +139,36 @@ router.post('/logout', isLoggedIn ,(req, res, next) => {
         req.logout();
         req.session.destroy();
         return res.status(200).send('로그아웃 되었습니다.');
+    }
+});
+
+router.post('/:id/posts', async (req, res, next) => {
+    try {
+        let where = {
+            UserId: parseInt(req.params.id, 10),
+            RetweetId: null,
+        };
+        if(parseInt(req.query.lastId, 10)) {
+            where[db.Sequelize.Op.lt] = parseInt(req.query.lastId, 10);
+        }
+        const posts = await db.Post.findAll({
+            where,
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+            }, {
+                model: db.Image,
+            }, {
+                model: db.User,
+                through: 'Like',
+                as: 'Likers',
+                attributes: ['id'],
+            }]
+        });
+        return res.json(posts);
+    }catch(error) {
+        console.error(error);
+        next(error);
     }
 });
 

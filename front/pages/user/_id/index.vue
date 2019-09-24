@@ -1,5 +1,15 @@
 <template>
     <v-container>
+        <v-card style="margin-bottom: 20px">
+            <v-container>
+                {{other.nickname}}
+                <v-row>
+                    <v-col cols="4">{{other.Folllowings.length}} 팔로잉</v-col>
+                    <v-col cols="4">{{other.Folllowers.length}} 팔로워</v-col>
+                    <v-col cols="4">{{other.Posts.length}} 게시글</v-col>
+                </v-row>
+            </v-container>
+        </v-card>
         <div>
             <post-card v-for="p in mainPosts" :key="p.id" :post="p" />
         </div>
@@ -12,8 +22,8 @@ export default {
         PostCard,
     },
     computed: {
-        me() {
-            return this.$store.state.users.me;
+        other() {
+            return this.$store.state.users.other;
         },
         mainPosts() {
             return this.$store.state.posts.mainPosts;
@@ -22,8 +32,19 @@ export default {
             return this.$store.state.posts.hasMorePost;
         }
     },
-    fetch({ store }) {
-        store.dispatch('posts/loadPosts');
+    fetch({ store, params }) {
+        store.dispatch('users/loadOther', {
+            userId: params.id
+        });
+        return store.dispatch('posts/loadUserPosts', {
+            userId: params.id
+        });
+    },
+    asyncData() {
+        // 비동기 작업을 위한 data
+        // 리턴값이 data에서 사용가능
+        // 컴포넌트 데이터를 비동기로 채워야할경우 사용
+        return{};
     },
     mounted() {
         // created에서 했으면 beforeDestroy에서 없애주지않으면 메모리 누수가 생긴다.

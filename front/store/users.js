@@ -4,15 +4,17 @@ export const state = () => ({
     followingList: [],
     hasMoreFollower: true,
     hasMoreFollowing: true,
+    other: null, //남의 정보
 });
 
-const totalFollowers = 8;
-const totalFollowings = 6;
 const limit = 3;
 
 export const mutations = {
     setMe(state, payload) {
         state.me = payload;
+    },
+    setOther(state, payload) {
+        state.other = payload;
     },
     changeNickname(state, payload) {
         state.me.nickname = payload.nickname;
@@ -66,6 +68,16 @@ export const actions = {
         }).catch((err) => {
             console.log(err);
         });
+    },
+    async loadOther({ commit }, payload) {
+        try{
+            const res = await this.$axios.get(`/user/${payload.userId}`, {
+                withCredentials: true,
+            });
+            commit('setOther', res.data);
+        }catch(error){
+            console.error(error);
+        }
     },
     signUp({ commit, state }, payload) {
         this.$axios.post('/user', {
