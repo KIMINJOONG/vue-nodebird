@@ -1,70 +1,69 @@
 <template>
-    <v-container>
-        <v-card style="margin-bottom: 20px">
-            <v-container>
-                {{other.nickname}}
-                <v-row>
-                    <v-col cols="4">{{other.Folllowings.length}} 팔로잉</v-col>
-                    <v-col cols="4">{{other.Folllowers.length}} 팔로워</v-col>
-                    <v-col cols="4">{{other.Posts.length}} 게시글</v-col>
-                </v-row>
-            </v-container>
-        </v-card>
-        <div>
-            <post-card v-for="p in mainPosts" :key="p.id" :post="p" />
-        </div>
-    </v-container>
+  <v-container>
+    <v-card style="margin-bottom: 20px">
+      <v-container>
+        {{other.nickname}}
+        <v-row>
+          <v-col cols="4">{{other.Followings.length}} 팔로잉</v-col>
+          <v-col cols="4">{{other.Followers.length}} 팔로워</v-col>
+          <v-col cols="4">{{other.Posts.length}} 게시글</v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+    <div>
+      <post-card v-for="p in mainPosts" :key="p.id" :post="p" />
+    </div>
+  </v-container>
 </template>
+
 <script>
-import PostCard from '../../../components/PostCard';
-export default {
+  import PostCard from '../../../components/PostCard';
+  export default {
     components: {
-        PostCard,
+      PostCard,
+    },
+    data() {
+      return {
+        name: 'Nuxt.js',
+      };
     },
     computed: {
-        other() {
-            return this.$store.state.users.other;
-        },
-        mainPosts() {
-            return this.$store.state.posts.mainPosts;
-        },
-        hasMorePost() {
-            return this.$store.state.posts.hasMorePost;
-        }
+      other() {
+        return this.$store.state.users.other;
+      },
+      mainPosts() {
+        return this.$store.state.posts.mainPosts;
+      },
     },
     fetch({ store, params }) {
+      return Promise.all([
+        store.dispatch('posts/loadUserPosts', {
+          userId: params.id,
+          reset: true,
+        }),
         store.dispatch('users/loadOther', {
-            userId: params.id
-        });
-        return store.dispatch('posts/loadUserPosts', {
-            userId: params.id
-        });
-    },
-    asyncData() {
-        // 비동기 작업을 위한 data
-        // 리턴값이 data에서 사용가능
-        // 컴포넌트 데이터를 비동기로 채워야할경우 사용
-        return{};
+          userId: params.id,
+        }),
+      ]);
     },
     mounted() {
-        // created에서 했으면 beforeDestroy에서 없애주지않으면 메모리 누수가 생긴다.
-        // window는 created에서 사용 불가 mounted를 사용해야함
-        window.addEventListener('scroll', this.onScroll);
+      window.addEventListener('scroll', this.onScroll);
     },
     beforeDestroy() {
-        window.removeEventListener('scroll', this.onScroll);
+      window.removeEventListener('scroll', this.onScroll);
     },
     methods: {
-        onScroll() {
-            if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-                if(this.hasMorePost) {
-                    this.$store.dispatch('posts/loadPosts');
-                }
-            }
-        },
+      onScroll() {
+        console.log('scroll');
+        if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+          if (this.hasMorePost) {
+            this.$store.dispatch('posts/loadPosts');
+          }
+        }
+      },
     },
-}
+  };
 </script>
-<style>
 
+<style>
 </style>

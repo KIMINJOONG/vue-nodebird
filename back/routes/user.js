@@ -142,34 +142,34 @@ router.post('/logout', isLoggedIn ,(req, res, next) => {
     }
 });
 
-router.post('/:id/posts', async (req, res, next) => {
+router.get('/:id/posts', async (req, res, next) => {
     try {
         let where = {
-            UserId: parseInt(req.params.id, 10),
-            RetweetId: null,
+          UserId: parseInt(req.params.id, 10),
+          RetweetId: null,
         };
-        if(parseInt(req.query.lastId, 10)) {
-            where[db.Sequelize.Op.lt] = parseInt(req.query.lastId, 10);
+        if (parseInt(req.query.lastId, 10)) {
+          where[db.Sequelize.Op.lt] = parseInt(req.query.lastId, 10);
         }
         const posts = await db.Post.findAll({
-            where,
-            include: [{
-                model: db.User,
-                attributes: ['id', 'nickname'],
-            }, {
-                model: db.Image,
-            }, {
-                model: db.User,
-                through: 'Like',
-                as: 'Likers',
-                attributes: ['id'],
-            }]
+          where,
+          include: [{
+            model: db.User,
+            attributes: ['id', 'nickname'],
+          }, {
+            model: db.Image,
+          }, {
+            model: db.User,
+            through: 'Like',
+            as: 'Likers',
+            attributes: ['id'],
+          }],
         });
-        return res.json(posts);
-    }catch(error) {
-        console.error(error);
-        next(error);
-    }
+        res.json(posts);
+      } catch (e) {
+        console.error(e);
+        next(e);
+      }
 });
 
 router.post('/:id/follow', isLoggedIn, async (req, res, next) => {
