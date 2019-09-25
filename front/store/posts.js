@@ -204,7 +204,7 @@ export const actions = {
     unlikePost({ commit }, payload) {
         this.$axios.delete(`/post/${payload.postId}/unlike`, {
             withCredentials: true,
-        }).then(() => {
+        }).then((res) => {
             commit('unlikePost', {
                 userId: res.data.userId,
                 postId: payload.postId

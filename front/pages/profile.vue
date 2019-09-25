@@ -53,8 +53,10 @@ export default {
         }
     },
     fetch({ store }) {
-        store.dispatch('users/loadFollowers', { offset: 0 });
-        return store.dispatch('users/loadFollowings', { offset: 0 });
+        return Promise.all([
+            store.dispatch('users/loadFollowers', { offset: 0 }),
+            store.dispatch('users/loadFollowings', { offset: 0 })
+        ]);
     },
     methods: {
         onChangeNickname() {
