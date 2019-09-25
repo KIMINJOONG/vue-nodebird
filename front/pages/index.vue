@@ -27,7 +27,9 @@ export default {
         }
     },
     fetch({ store }) {
-        return store.dispatch('posts/loadPosts');
+        return store.dispatch('posts/loadPosts', {
+            reset: true
+        });
     },
     asyncData() {
         // 비동기 작업을 위한 data

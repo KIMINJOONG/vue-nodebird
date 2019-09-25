@@ -12,6 +12,7 @@ const morgan = require('morgan');
 const usersRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
+const hashtagRouter = require('./routes/hashtag');
 
 // db.sequelize.sync({ force: true });
 db.sequelize.sync();
@@ -45,6 +46,7 @@ app.get('/', (req, res) => {
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
+app.use('/hashtag', hashtagRouter);
 
 
 app.listen(3085, () => {
