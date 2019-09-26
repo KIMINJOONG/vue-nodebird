@@ -12,7 +12,14 @@
             <div>
                 <h3>{{ post.User.nickname }}</h3>
                 <template v-for="(node, i) in nodes">
-                    <nuxt-link v-if="node.startsWith('#')" :key="i" :to="`/hashtag/${node.slice(1)}`">{{node}}</nuxt-link>
+                    <nuxt-link 
+                        v-if="node.startsWith('#')" 
+                        :key="i" 
+                        :to="`/hashtag/${node.slice(1)}`"
+                        style="color: deepskyblue"
+                    >
+                        {{node}}
+                    </nuxt-link>
                     <template v-else>{{node}}</template>
                 </template>
             </div>

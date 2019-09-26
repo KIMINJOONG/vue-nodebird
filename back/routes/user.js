@@ -42,7 +42,7 @@ router.post('/',isNotLoggedIn, async (req, res, next) => {
         const hash = await bcrypt.hash(req.body.password, 12);
         const exUser = await db.User.findOne({
             where: {
-                email: req.body.email,
+                userId: req.body.userId,
             },
         });
         if(exUser) {
@@ -52,7 +52,7 @@ router.post('/',isNotLoggedIn, async (req, res, next) => {
             });
         }
         const newUser = await db.User.create({
-            email: req.body.email,
+            userId: req.body.userId,
             password: hash,
             nickname: req.body.nickname,
         }); //HTTP STATUS CODE
@@ -72,7 +72,7 @@ router.post('/',isNotLoggedIn, async (req, res, next) => {
                 }
                 const fullUser = await db.User.findOne({
                     where: { id: user.id },
-                    attributes: ['id', 'email', 'nickname'],
+                    attributes: ['id', 'userId', 'nickname'],
                     include: [{
                         model: db.Post,
                         attributes: ['id']
@@ -115,7 +115,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
             }
             const fullUser = await db.User.findOne({
                 where: { id: user.id },
-                attributes: ['id', 'email', 'nickname'],
+                attributes: ['id', 'userId', 'nickname'],
                 include: [{
                     model: db.Post,
                     attributes: ['id']

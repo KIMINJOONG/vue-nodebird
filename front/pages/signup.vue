@@ -7,10 +7,9 @@
 
                     <v-form ref="form" v-model="valid" @submit.prevent="onSubmitForm">
                         <v-text-field 
-                            v-model="email"
-                            label="이메일"
-                            type="email"
-                            :rules="emailRules"
+                            v-model="userId"
+                            label="아이디"
+                            :rules="userIdRules"
                             required
                         />
                         <v-text-field 
@@ -52,13 +51,12 @@ export default {
     data() {
         return {
             valid: false,
-            email: '',
+            userId: '',
             password: '',
             passwordCheck: '',
             terms: false,
-            emailRules: [
-                v => !!v || '이메일은 필수입니다.',
-                v => /.+@.+/.test(v) || '이메일이 유효하지 않습니다.'
+            userIdRules: [
+                v => !!v || '아이디는 필수입니다.',
             ],
             nickname: '',
             nicknameRules: [
@@ -93,7 +91,7 @@ export default {
             if(this.$refs.form.validate()) {
                 this.$store.dispatch('users/signUp', {
                     nickname: this.nickname,
-                    email: this.email,
+                    userId: this.userId,
                     password: this.password
                 }).then(() => {
                     this.$router.push({
